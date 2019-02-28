@@ -1,0 +1,27 @@
+universe = vanilla
+executable = testwrapper.sh
+arguments = ./testjob.sh
+
+output = testjob-$(cluster).out
+error = testjob-$(cluster).err
+log = testjob-$(cluster).log
+
+transfer_executable = True
+transfer_input_files = testjob.sh, my.input
+transfer_output_files = my.output, my.checkpoint, wrapper.checkpoint, wrapper.log
+when_to_transfer_output = ON_EXIT_OR_EVICT
+
++CheckpointExitBySignal = True
++CheckpointExitSignal = 10
++SuccessCheckpointExitBySignal = True
++SuccessCheckpointExitSignal = 10
+
++WantCheckpointSignal = True
++WantFTOnCheckpoint = True
++CheckpointSig = 10
+
+kill_sig = 10
+
+requirements = (TARGET.Machine is "CRUSH-SUGWG-OSG-10-5-228-85" || MY.Machine is "CRUSH-SUGWG-OSG-10-5-228-85")
+
+queue
