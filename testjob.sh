@@ -2,12 +2,28 @@
 
 set -e
 
+want_suspend=false
+
 function onsuspend {
-  sleep 1
+  echo "got SIGTSTP, sending myself SIGSTOP" >&2
+  want_suspend=true
   /bin/kill -s STOP $$
 }
 
+function onhangup {
+  if [ "${want_suspend}" = "true" ] ; then
+    want_suspend=false
+    echo "got SIGHUP while in suspend state, sending myself SIGSTOP" >&2
+    /bin/kill -s STOP $$
+  else
+    echo "got SIGHUP while running, sending myself SIGHUP" >&2
+    trap - HUP
+    /bin/kill -s HUP $$
+  fi
+}
+
 trap onsuspend TSTP
+trap onhangup HUP
 
 i=0
 

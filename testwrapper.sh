@@ -5,24 +5,36 @@ set -e
 strace_pid=""
 prog_pid=""
 
+function checkpoint_death {
+  echo "exiting with SIGTERM" &>> wrapper.log
+  cleanup
+  /bin/kill -s TERM $$
+}
+
 function checkpoint_trap {
   echo "checkpoint_trap function called" &>> wrapper.log
   while prog_state=$(ps hos -p ${prog_pid}) && [[ "${prog_state}" = "D" ]] ; do
     echo "process is doing disk i/o, waiting..." &>> wrapper.log
     sleep 5
   done
-  if ps hos -p ${prog_pid} ; then
-    echo "sending SIGTSTP to pid ${prog_pid}" &>> wrapper.log
-    /bin/kill -s TSTP ${prog_pid} &>> wrapper.log
+  echo "sending SIGTSTP to pid ${prog_pid}" &>> wrapper.log
+  if /bin/kill -s TSTP ${prog_pid} &>> wrapper.log ; then
+    while sleep 5 && prog_state=$(ps hos -p ${prog_pid}) && ! [[ "${prog_state}" = "t" || "${prog_state}" = "T" ]] ; do
+      echo "waiting for pid ${prog_pid} to suspend..." &>> wrapper.log
+    done
+    echo "pid ${prog_pid} is in state ${prog_state}" &>> wrapper.log
+  else
+    echo "failed to send SIGTSTP to ${prog_pid}" &>> wrapper.log
+    checkpoint_death
+  fi
+  if prog_state=$(ps hos -p ${prog_pid}) ; then
     echo "unsetting USR1 trap and re-sending USR1 to pid $$" &>> wrapper.log
     trap - USR1
     cleanup
     /bin/kill -s USR1 $$
   else
     echo "process went away during checkpoint" &>> wrapper.log
-    echo "exiting with SIGTERM" &>> wrapper.log
-    cleanup
-    /bin/kill -s TERM $$
+    checkpoint_death
   fi
 }
 
