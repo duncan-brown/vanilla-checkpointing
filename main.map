@@ -1,0 +1,2 @@
+my.output /home/dbrown/projects/osg/condor-checkpoint-sig/output/my.output pool="local"
+wrapper.log /home/dbrown/projects/osg/condor-checkpoint-sig/output/wrapper.log pool="local"
