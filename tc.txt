@@ -1,0 +1,10 @@
+tr jobwrapper {
+        profile condor "universe" "vanilla"
+        site local {
+                pfn "/home/dbrown/projects/osg/condor-checkpoint-sig/testwrapper.sh"
+                arch "x86_64"
+                os "linux"
+                type "INSTALLED"
+        }
+}
+
