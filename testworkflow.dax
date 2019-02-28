@@ -11,7 +11,7 @@
    </file>
 
    
-   <job id="j1" namespace="pegasus" name="jobwrapper" version="4.0">
+   <job id="j1" name="jobwrapper">
       <argument><file name="testjob.sh"/></argument>
       <uses name="testjob.sh" link="input"/>
       <uses name="my.input" link="input"/>
