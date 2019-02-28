@@ -15,12 +15,21 @@ function checkpoint_trap {
   echo "checkpoint_trap function called" &>> wrapper.log
   while prog_state=$(ps hos -p ${prog_pid}) && [[ "${prog_state}" = "D" ]] ; do
     echo "process is doing disk i/o, waiting..." &>> wrapper.log
-    sleep 5
+    sleep 10
   done
   echo "sending SIGTSTP to pid ${prog_pid}" &>> wrapper.log
   if /bin/kill -s TSTP ${prog_pid} &>> wrapper.log ; then
+    n=0
     while sleep 5 && prog_state=$(ps hos -p ${prog_pid}) && ! [[ "${prog_state}" = "t" || "${prog_state}" = "T" ]] ; do
       echo "waiting for pid ${prog_pid} to suspend..." &>> wrapper.log
+      n=$(( ${n} + 1 ))
+      if [[ ${n} -gt 5 ]] ; then
+        echo "pid ${prog_pid} is still in state ${prog_state}" &>> wrapper.log
+        echo "giving up checkpointing and sending SIGKILL" &>> wrapper.log
+        set +e
+        /bin/kill -s KILL ${prog_pid}
+        /bin/kill -s KILL $$
+      fi
     done
     echo "pid ${prog_pid} is in state ${prog_state}" &>> wrapper.log
   else
