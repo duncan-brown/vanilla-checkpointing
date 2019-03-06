@@ -22,6 +22,6 @@ when_to_transfer_output = ON_EXIT_OR_EVICT
 
 kill_sig = 10
 
-requirements = (TARGET.Machine is "CRUSH-SUGWG-OSG-10-5-228-85" || MY.Machine is "CRUSH-SUGWG-OSG-10-5-228-85")
+requirements = (Machine is "CRUSH-SUGWG-OSG-10-5-231-190")
 
 queue
