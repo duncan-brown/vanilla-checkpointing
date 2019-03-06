@@ -30,7 +30,7 @@ echo -e "\n##################### Checking file integrity for input files #######
 set +e
 job_ec=0
 echo -e "\n######################[Pegasus Lite] Executing the user task ######################"  1>&2
-/home/dbrown/projects/osg/condor-checkpoint-sig/testwrapper.sh -n testjob -N j1 -R local  -s my.output=my.output -s my.checkpoint=my.checkpoint -s wrapper.log=wrapper.log -s wrapper.checkpoint=wrapper.checkpoint -L diamond -T 2019-02-28T17:34:12-05:00 /home/dbrown/projects/osg/condor-checkpoint-sig/testjob.sh 
+pegasus-kickstart -n testjob -N j1 -R local  -s my.output=my.output -s my.checkpoint=my.checkpoint -s wrapper.log=wrapper.log -s wrapper.checkpoint=wrapper.checkpoint -L diamond -T 2019-02-28T17:34:12-05:00 /home/dbrown/projects/osg/condor-checkpoint-sig/testjob.sh 
 job_ec=$?
 set -e
 
