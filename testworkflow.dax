@@ -11,9 +11,7 @@
    </file>
 
    
-   <job id="j1" name="jobwrapper">
-      <argument><file name="testjob.sh"/></argument>
-      <uses name="testjob.sh" link="input"/>
+   <job id="j1" name="testjob">
       <uses name="my.input" link="input"/>
       <uses name="my.output" link="output" transfer="true" register="true"/>
       <uses name="wrapper.log" link="output" transfer="true" register="true"/>

@@ -1,7 +1,8 @@
-tr jobwrapper {
+tr testjob {
         profile condor "universe" "vanilla"
+        profile dagman "post" "none"
         site local {
-                pfn "/home/dbrown/projects/osg/condor-checkpoint-sig/testwrapper.sh"
+                pfn "/home/dbrown/projects/osg/condor-checkpoint-sig/testjob.sh"
                 arch "x86_64"
                 os "linux"
                 type "INSTALLED"
