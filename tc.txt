@@ -1,5 +1,10 @@
 tr testjob {
         profile condor "universe" "vanilla"
+
+        profile pegasus "checkpoint.style" "condor"
+        profile pegasus "checkpoint.condor.signal" "USR1"
+        profile pegasus "checkpoint.condor.action" "stop_and_exit"
+
         site local {
                 pfn "/home/dbrown/projects/osg/condor-checkpoint-sig/testjob.sh"
                 arch "x86_64"
